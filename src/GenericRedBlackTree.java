@@ -6,16 +6,20 @@
  *            </a>
  */
 public class GenericRedBlackTree<K extends Comparable<K>, V> {
+    public static final boolean BLACK = false;
+    public static final boolean RED = true;
 
-    /**
-     * Root node of the red black tree
-     */
     private Node root = null;
-
-    /**
-     * Size of the tree
-     */
+    private Node Nil = null;
     private int size = 0;
+
+    GenericRedBlackTree() {
+        Nil = new Node(null, null) {
+            @Override
+            public K key()      { throw new RuntimeException("Tried to access Nil key"); }
+            public V value()    { throw new RuntimeException("Tried to access Nil value"); }
+        };
+    }
 
     /**
      * Search for the node by key, and return the corresponding value
@@ -34,7 +38,7 @@ public class GenericRedBlackTree<K extends Comparable<K>, V> {
      * @param value     {@code V} the value of the new element
      */
     public void insert(K key, V value) {
-        // TODO: Lab 4 Part 3-2 -- insert an element into the tree
+
 
     }
 
@@ -93,28 +97,27 @@ public class GenericRedBlackTree<K extends Comparable<K>, V> {
         } // for (int i = 0; i < 10; i++)
     }
 
-
-    /**
-     * The {@code Node} class for {@code GenericRedBlackTree}
-     */
     private class Node {
-        public static final boolean BLACK = true;
-        public static final boolean RED = false;
 
-        public K key;
-        public V value;
+        private K key;
+        private V value;
         public boolean color = BLACK;
-        public Node parent = null, lChild = null, rChild = null;
+        public Node parent = null, left = Nil, right = Nil;
 
         public Node(K key, V value) {                   // By default, a new node is black with two NIL children
+            this.key = key;
             this.value = value;
-            if (value != null) {
-                lChild = new Node(null, null);          // And the NIL children are both black
-                lChild.parent = this;
-                rChild = new Node(null, null);
-                rChild.parent = this;
-            }
+
+//            if (value != null) {
+//                lChild = new Node(null, null);          // And the NIL children are both black
+//                lChild.parent = this;
+//                rChild = new Node(null, null);
+//                rChild.parent = this;
+//            }
         }
+
+        public K key()    { return key; }
+        public V value()  { return value; }
 
         /**
          * Print the tree node: red node wrapped by "<>"; black node by "[]"
