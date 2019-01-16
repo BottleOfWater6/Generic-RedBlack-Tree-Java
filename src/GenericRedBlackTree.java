@@ -1,5 +1,3 @@
-import org.omg.SendingContext.RunTime;
-
 /**
  * Lab 4: Generics <br />
  * The {@code GenericRedBlackTree} class <br />
@@ -56,16 +54,20 @@ public class GenericRedBlackTree<K extends Comparable<K>, V> {
 
         curr.set(key, value);
 
-//        insertFixUp(curr);
+     
+
+        insertFixup(curr);
     }
 
-    private void insertFixUp(Node z) {
+    private void insertFixup(Node z) {
+
 
         Node y;
 
-        while (z.parent.color == RED) {
-            if (z.parent.isLeft()) {
+        while ((z.parent.color) == RED) {
 
+
+            if (z.parent.isLeft()) {
                 y = z.parent.parent.right;
 
                 if (y.color == RED) {
@@ -74,12 +76,51 @@ public class GenericRedBlackTree<K extends Comparable<K>, V> {
                     z.parent.parent.color = RED;
                     z = z.parent.parent;
 
-                } else if (z.isRight()){
-                    z = z.parent;
+                } else {
 
+                    if (z.isRight()) {
+                        z = z.parent;
+                        leftRotate(z);
+                    }
+
+                    z.parent.color = BLACK;
+                    z.parent.parent.color = RED;
+                    rightRotate(z.parent.parent);
                 }
             }
+
+            else {
+                y = z.parent.parent.left;
+
+                if (y.color == RED) {
+                    z.parent.color = BLACK;
+                    y.color = BLACK;
+                    z.parent.parent.color = RED;
+                    z = z.parent.parent;
+
+                } else {
+
+                    if (z.isLeft()) {
+                        z = z.parent;
+                        rightRotate(z);
+                    }
+
+                    z.parent.color = BLACK;
+                    z.parent.parent.color = RED;
+                    leftRotate(z.parent.parent);
+                }
+            }
+
+            if (z == root) break;
+
+            System.out.println("z.key() = " + z.key());
+            System.out.println("(z.parent.color == RED) = " + (z.parent.color == RED));
+            print();
+
         }
+
+        root.color = BLACK;
+
 
 
 
@@ -159,19 +200,8 @@ public class GenericRedBlackTree<K extends Comparable<K>, V> {
     }
 
     public void print() {
-
         printRecurse(root);
-
-        System.out.println("--------------- Left rotate root");
-
-        leftRotate(root.right);
-        rightRotate(root.right);
-
-        printRecurse(root);
-
-
-
-
+        System.out.println("-----------------");
     }
 
     public void printRecurse(Node node) {
@@ -179,13 +209,13 @@ public class GenericRedBlackTree<K extends Comparable<K>, V> {
         System.out.println(node);
 
         if (node.left != null) {
-            System.out.print("<L> ");
+            System.out.print("L) ");
             printRecurse(node.left);
 //            System.out.print("</L> ");
         }
 
         if (node.right != null) {
-            System.out.print("<R> ");
+            System.out.print("R) ");
             printRecurse(node.right);
 //            System.out.print("</R> ");
 
@@ -199,27 +229,38 @@ public class GenericRedBlackTree<K extends Comparable<K>, V> {
      */
     public static void main(String[] args) {
 
-        GenericRedBlackTree<Integer, String> rbt = new GenericRedBlackTree<>();
+//        GenericRedBlackTree<Integer, String> rbt = new GenericRedBlackTree<>();
 //        rbt.insert(-5, "-5");
-        rbt.insert(0, "0");
-        rbt.insert(-1, "-1");
-        rbt.insert(1, "1");
-        rbt.insert(2, "2");
 
-        rbt.print();
-
-
-//        GenericRedBlackTree<Integer, String> rbt = new GenericRedBlackTree<Integer, String>();
-//        int[] keys = new int[10];
-//        for (int i = 0; i < 10; i++) {
-//            keys[i] = (int) (Math.random() * 200);
-//            System.out.println(String.format("%2d Insert: %-3d ", i+1, keys[i]));
-//            rbt.insert(keys[i], "\"" + keys[i] + "\"");
-//        } // for (int i = 0; i < 10; i++)
+//        rbt.insert(8, "8");
+//        rbt.insert(-1, "-1");
+//        rbt.insert(5, "5");
+//        rbt.insert(1, "1");
 //
-//        System.out.println(rbt.root);                   // This helps to figure out the tree structure
-//        System.out.println(rbt);
+//        rbt.insert(3, "3");
+//        rbt.insert(7, "7");
+//        rbt.insert(4, "4");
 //
+//        rbt.insert(6, "6");
+//        rbt.insert(2, "2");
+//
+//        rbt.insert(9, "9");
+//        rbt.insert(0, "0");
+
+//        rbt.print();
+
+
+        GenericRedBlackTree<Integer, String> rbt = new GenericRedBlackTree<>();
+        int[] keys = new int[10];
+        for (int i = 0; i < 10; i++) {
+            keys[i] = (int) (Math.random() * 200);
+            System.out.println(String.format("%2d Insert: %-3d ", i+1, keys[i]));
+            rbt.insert(keys[i], "\"" + keys[i] + "\"");
+        } // for (int i = 0; i < 10; i++)
+
+        System.out.println(rbt.root);                   // This helps to figure out the tree structure
+        System.out.println(rbt);
+
 //        for (int i = 0; i < 10; i++) {
 //            System.out.println(String.format("%2d Delete: %3d(%s)", i+1, keys[i], rbt.remove(keys[i])));
 //            if ((i + 1) % 5 == 0) {
